@@ -1,0 +1,39 @@
+name: Autograder
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  autograder:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run score_assignment.py (Student's Code)
+      run: |
+        if [ -f "score_assignment.py" ]; then
+          python score_assignment.py
+        else
+          echo "score_assignment.py not found"
+          exit 1
+          
+    - name: Run autograder
+      run: |
+        python run_autograder.py
