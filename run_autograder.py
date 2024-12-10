@@ -49,11 +49,26 @@ def main():
         print("Score assignment failed. Exiting.")
         return
 
+    # Check if the student output file was created
+    if not os.path.exists("student_output.csv"):
+        print("Error: student_output.csv not generated!")
+        return
+
     # Load the expected DataFrame
-    expected_df = pd.read_csv("nicknames.csv")
+    try:
+        expected_df = pd.read_csv("nicknames.csv")
+    except FileNotFoundError:
+        print("Expected nicknames.csv file not found!")
+        return
     
-    # Assuming the student's code generates 'nickname_df' (or similar)
-    student_df = pd.read_csv("student_output.csv")  # This is where the student's output will be saved
+    # Load the student's output DataFrame
+    try:
+        student_df = pd.read_csv("student_output.csv")
+    except FileNotFoundError:
+        print("Student's output file not found!")
+        return
+
+    # Compare the DataFrames
     compare_dataframes(student_df, expected_df)
 
     # Run the tests using pytest
